@@ -108,12 +108,12 @@ try {
                 <img src='cid:logo' alt='Plataforma50 Logo'>
             </div>
             <div class='content'>
-                <p>Hi,</p>
-                <p>You have been contacted by <span class='label'>$name</span> with the following message:</p>
+                <p>Hola,</p>
+                <p>Usted ha sido contactado por <span class='label'>$name</span> con el siguiente mensaje:</p>
                 <p><em>$message</em></p>
-                <p>Please reply to <a href='mailto:$email'>$email</a> or contact via phone:<span class='label'> $phone </span> </p>
-                <p>Best regards,</p>
-                <p>The Plataforma50 Team</p>
+                <p>Por favor, responda a <a href='mailto:$email'>$email</a> o póngase en contacto por teléfono:<span class='label'> $phone </span> </p>
+                <p>Saludos cordiales,</p>
+                <p>El equipo de Plataforma50</p>
             </div>
             <div class='footer'>    
                 <p>&copy; 2024 Plataforma50. All rights reserved.</p>
@@ -194,10 +194,10 @@ try {
                 <img src='cid:logo' alt='Plataforma50 Logo'>
             </div>
             <div class='content'>
-                <p>Hi, <strong>$name</strong>,</p>
-                <p>Thank you for contacting us. We have received your message and will respond as soon as possible.</p>
-                <p>Best regards,</p>
-                <p>The Plataforma50 Team</p>
+                <p>Hola, <strong>$name</strong>,</p>
+                <p>Gracias por ponerse en contacto con nosotros. Hemos recibido su mensaje y le responderemos lo antes posible.</p>
+                <p>Saludos cordiales,</p>
+                <p>El equipo de Plataforma50</p>
             </div>
             <div class='footer'>    
                 <p>&copy; 2024 Plataforma50. All rights reserved.</p>
