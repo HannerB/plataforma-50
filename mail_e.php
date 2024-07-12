@@ -20,14 +20,14 @@ try {
         throw new Exception('Método de solicitud no permitido.');
     }
 
-    $nombre = $_POST['name'] ?? '';
+    $name = $_POST['name'] ?? '';
     $email = $_POST['email'] ?? '';
     $phone = $_POST['phone'] ?? '';
     $subject = $_POST['subject'] ?? '';
-    $mensaje = $_POST['message'] ?? '';
+    $message = $_POST['message'] ?? '';
     
     // Verificar que se recibieron todos los datos
-    if (empty($nombre) || empty($email) || empty($phone) || empty($subject) || empty($mensaje)) {
+    if (empty($name) || empty($email) || empty($phone) || empty($subject) || empty($message)) {
         throw new Exception('Todos los campos son obligatorios.');
     }
 
@@ -46,7 +46,6 @@ try {
         $mail->setFrom('ceo@plataforma50.com', 'Plataforma50');
         $mail->addAddress('maraos.ep@gmail.com'); // Cambiar por el destinatario
         $mail->addEmbeddedImage(__DIR__ . '/assets/images/logo-plataforma.png', 'logo');
-
         $body = "
           <html>
             <head>
@@ -57,12 +56,12 @@ try {
                         color: #333;
                         margin: 0;
                         padding: 0;
-                        background-color: #f0f0f0; /* Fondo gris */
+                        background-color: #f0f0f0; /* Gray background */
                     }
                     .container {
                         padding: 20px;
                         border-radius: 5px;
-                        background-color: #fff; /* Contenedor blanco */
+                        background-color: #fff; /* White container */
                         max-width: 700px;
                         margin: 20px auto;
                         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -110,15 +109,15 @@ try {
                         <img src='cid:logo' alt='Plataforma50 Logo'>
                     </div>
                     <div class='content'>
-                        <p>Hola,</p>
-                        <p>Has sido contactado por <span class='label'>$nombre</span>  con el siguiente mensaje:</p>
-                        <p><em>$mensaje</em></p>
-                        <p>Por favor, escríbele lo antes posible a: <a href='mailto:$email'>$email</a> o contáctalo vía telefónica a:<span class='label'> $phone </span> </p>
-                        <p>Saludos,</p>
-                        <p>El equipo de Plataforma50</p>
+                        <p>Hi,</p>
+                        <p>You have been contacted by <span class='label'>$name</span> with the following message:</p>
+                        <p><em>$message</em></p>
+                        <p>Please reply to <a href='mailto:$email'>$email</a> or contact via phone:<span class='label'> $phone </span> </p>
+                        <p>Best regards,</p>
+                        <p>The Plataforma50 Team</p>
                     </div>
                     <div class='footer'>    
-                        <p>&copy; 2024 Plataforma50. Todos los derechos reservados.</p>
+                        <p>&copy; 2024 Plataforma50. All rights reserved.</p>
                     </div>
                 </div>
             </body>
@@ -128,12 +127,12 @@ try {
         $mail->Subject = $subject;
         $mail->Body = $body;
 
-        // Enviar el correo a Plataforma50
+        // Send email to Plataforma50
         $mail->send();
 
-        // Enviar correo de confirmación al remitente
+        // Send confirmation email to sender
         $mail->clearAddresses();
-        $mail->addAddress($email); // Enviar al remitente
+        $mail->addAddress($email); // Send to sender
         $confirmBody = "
           <html>
             <head>
@@ -144,12 +143,12 @@ try {
                         color: #333;
                         margin: 0;
                         padding: 0;
-                        background-color: #f0f0f0; /* Fondo gris */
+                        background-color: #f0f0f0; /* Gray background */
                     }
                     .container {
                         padding: 20px;
                         border-radius: 5px;
-                        background-color: #fff; /* Contenedor blanco */
+                        background-color: #fff; /* White container */
                         max-width: 700px;
                         margin: 20px auto;
                         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -194,32 +193,33 @@ try {
                         <img src='cid:logo' alt='Plataforma50 Logo'>
                     </div>
                     <div class='content'>
-                        <p>Hola, <strong>$nombre</strong>,</p>
-                        <p>Gracias por contactarnos. Hemos recibido tu mensaje y te responderemos lo antes posible.</p>
-                        <p>Saludos,</p>
-                        <p>El equipo de Plataforma50</p>
+                        <p>Hi, <strong>$name</strong>,</p>
+                        <p>Thank you for contacting us. We have received your message and will respond as soon as possible.</p>
+                        <p>Best regards,</p>
+                        <p>The Plataforma50 Team</p>
                     </div>
                     <div class='footer'>    
-                        <p>&copy; 2024 Plataforma50. Todos los derechos reservados.</p>
+                        <p>&copy; 2024 Plataforma50. All rights reserved.</p>
                     </div>
                 </div>
             </body>
             </html>
         ";
         $mail->Body = $confirmBody;
-        $mail->Subject = 'Gracias por contactarnos';
+        $mail->Subject = 'Thank you for contacting us';
 
         $mail->send();
+        return json_encode(['success'  => true, 'message' => 'Email sent successfully.']);
 
-        // Envío de correo exitoso, devolver una respuesta JSON
-        $response['success'] = true;
-        $response['message'] = 'Correo enviado exitosamente.';
+        // Email sent successfully, return JSON response
+        // $response['success'] = true;
+        // $response['message'] = 'Email sent successfully.';
     } catch (Exception $e) {
-        // Error al enviar el correo
-        throw new Exception('Error al enviar el correo: ' . $mail->ErrorInfo);
+        // Error sending email
+        throw new Exception('Error sending email: ' . $mail->ErrorInfo);
     }
 } catch (Exception $e) {
-    $response['message'] = $e->getMessage();
+    $response['message'] = $e->getmessage();
 }
 
 echo json_encode($response);

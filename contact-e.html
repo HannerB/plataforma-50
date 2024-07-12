@@ -157,22 +157,22 @@
                             </ul>
                         </div>
                         <div class="col-lg-8 mobt-35">
-                            <form id="contact-form" action="mail.php" method="POST" class="contact-input position-relative">
+                            <form id="contact-form" action="mail_e.php" method="POST" class="contact-input position-relative">
                                 <div class="row">
-                                    <div class="col-xl-6 col-lg-6 col-sm-12 col-12">
-                                        <label>Name</label>
-                                        <input type="text" name="name" placeholder="Your Name">
-                                    </div>
-                                    <div class="col-xl-6 col-lg-6 col-sm-12 col-12">
-                                        <label>E-mail</label>
+									<div class="col-xl-6 col-lg-6 col-sm-12 col-12">
+										<label>E-mail</label>
                                         <input type="email" name="email" placeholder="Yourmail@.com">
                                     </div>
 									<div class="col-xl-6 col-lg-6 col-sm-12 col-12">
-                                        <label>Number Phone</label>
+										<label>Number Phone</label>
                                         <input type="number" name="phone" placeholder="Phone">
                                     </div>
-									<div class="col-xl-6 col-lg-6 col-sm-12 col-12">
-                                        <label>Subject</label>
+									<div class="col-xl-12 col-lg-12 col-sm-12 col-12">
+										<label>Name</label>
+										<input type="text" name="name" placeholder="Your Name">
+									</div>
+									<div class="col-xl-12 col-lg-12 col-sm-12 col-12">
+										<label>Subject</label>
                                         <input type="text" name="subject" placeholder="Subject of your message">
                                     </div>
                                     <div class="col-xl-12 col-lg-12 col-sm-12 col-12">
@@ -190,12 +190,50 @@
                                         </button>
                                     </div>
                                     <p class="form-message"></p>
+									<p id="response-message"></p>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
+
+			<script>
+				// Capturar el evento submit del formulario
+$('#contact-form').submit(function(e) {
+    e.preventDefault(); // Evitar que se envíe el formulario de manera tradicional
+
+    // Realizar la solicitud AJAX
+    $.ajax({
+        url: 'mail_e.php', // URL del script PHP que maneja el envío de correo
+        type: 'POST', // Método HTTP POST
+        data: $(this).serialize(), // Serializar los datos del formulario
+        success: function(response) {
+            try {
+                var result = JSON.parse(response); // Intentar analizar la respuesta como JSON
+                if (result.success) {
+                    // Mostrar mensaje de éxito
+                    $('.form-message').html('<p class="success-message">' + result.message + '</p>');
+                    // Limpiar el formulario después de enviar
+                    $('#contact-form')[0].reset();
+                } else {
+                    // Mostrar mensaje de error
+                    $('.form-message').html('<p class="error-message">Error: ' + result.message + '</p>');
+                }
+            } catch (e) {
+                console.error('Error parsing JSON response:', e);
+                $('.form-message').html('<p class="error-message">Error: Unexpected response from server.</p>');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error:', error); // Mostrar detalles del error en la consola
+            $('.form-message').html('<p class="error-message">Error sending request.</p>');
+        }
+    });
+});
+
+
+			</script>
 
             <!-- contact End -->
 
