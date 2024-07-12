@@ -210,49 +210,93 @@ var testimonialSlider_two = new Swiper(".testimonial-slider-two", {
 ///////////////////////////////////////////////////////
 // Contact Form Start
 
-// Get the form.
+// Obtener el formulario.
 var form = $('#contact-form');
 
-// Get the messages div.
-var formMessages = $('.form-message');
+// Determinar el idioma basado en el atributo action del formulario
+var isEnglish = form.attr('action').includes('mail_e.php');
 
-// Set up an event listener for the contact form.
-$(form).on( 'submit', function(e) {
-  // Stop the browser from submitting the form.
-  e.preventDefault();
+// Configurar los mensajes según el idioma
+var messages = {
+    sending: isEnglish ? 'Sending message...' : 'Enviando mensaje...',
+    success: {
+        title: isEnglish ? 'Success!' : '¡Éxito!',
+        text: isEnglish ? 'Message sent successfully.' : 'Mensaje enviado correctamente.'
+    },
+    error: {
+        title: isEnglish ? 'Error' : 'Error',
+        text: isEnglish ? 'An error occurred. Please try again.' : 'Ocurrió un error. Por favor, intenta de nuevo.',
+        serverError: isEnglish ? 'Error in server response. Please try again.' : 'Error en la respuesta del servidor. Por favor, intenta de nuevo.'
+    },
+    button: isEnglish ? 'OK' : 'Aceptar'
+};
 
-  // Serialize the form data.
-  var formData = $(form).serialize();
+// Configurar un listener de eventos para el formulario de contacto.
+$(form).on('submit', function(e) {
+    // Evitar que el navegador envíe el formulario.
+    e.preventDefault();
 
-  // Submit the form using AJAX.
-  $.ajax({
-    type: 'POST',
-    url: $(form).attr('action'),
-    data: formData
-  })
-  .done(function(response) {
-    // Make sure that the formMessages div has the 'success' class.
-    $(formMessages).removeClass('error');
-    $(formMessages).addClass('success');
+    // Serializar los datos del formulario.
+    var formData = $(form).serialize();
 
-    // Set the message text.
-    $(formMessages).text(response);
+    // Mostrar indicador de carga
+    Swal.fire({
+        title: messages.sending,
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
 
-    // Clear the form.
-    $('#contact-form input,#contact-form textarea').val('');
-  })
-  .fail(function(data) {
-    // Make sure that the formMessages div has the 'error' class.
-    $(formMessages).removeClass('success');
-    $(formMessages).addClass('error');
+    // Enviar el formulario usando AJAX.
+    $.ajax({
+        type: 'POST',
+        url: $(form).attr('action'),
+        data: formData,
+        dataType: 'json',
+        timeout: 30000 // 30 segundos
+    })
+    .done(function(response) {
+        console.log("Respuesta del servidor:", response);
+        if (response.success) {
+            // Mensaje enviado con éxito
+            Swal.fire({
+                icon: 'success',
+                title: messages.success.title,
+                text: messages.success.text,
+                confirmButtonText: messages.button
+            });
+            $('#contact-form input, #contact-form textarea').val('');
+        } else {
+            // El servidor respondió, pero no con éxito
+            Swal.fire({
+                icon: 'error',
+                title: messages.error.title,
+                text: response.message || messages.error.text,
+                confirmButtonText: messages.button
+            });
+        }
+    })
+    .fail(function(jqXHR, textStatus, errorThrown) {
+        console.log("Estado del error:", textStatus);
+        console.log("Error lanzado:", errorThrown);
+        console.log("Respuesta del servidor:", jqXHR.responseText);
 
-    // Set the message text.
-    if (data.responseText !== '') {
-      $(formMessages).text(data.responseText);
-    } else {
-      $(formMessages).text('Oops! An error occurred. Message could not be sent.');
-    }
-  });
+        let errorMessage = messages.error.serverError;
+        try {
+            var response = JSON.parse(jqXHR.responseText);
+            errorMessage = response.message || errorMessage;
+        } catch (e) {
+            console.error("Error al parsear la respuesta JSON:", e);
+        }
+
+        Swal.fire({
+            icon: 'error',
+            title: messages.error.title,
+            text: errorMessage,
+            confirmButtonText: messages.button
+        });
+    });
 });
 // Contact Form End
 
