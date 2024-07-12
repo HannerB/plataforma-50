@@ -11724,4 +11724,17 @@ fieldset:disabled .btn {
     height: 100px !important;
 }
 
+@media screen and (max-width: 768px) {
+    .logo-footer {
+        display: none;
+    }
+}
+
+
+@media screen and (max-width: 320px) {
+    .imagen-logo {
+        width: 230px;
+    }
+}
+
 /*# sourceMappingURL=bootstrap.min.css.map */

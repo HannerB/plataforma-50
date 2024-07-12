@@ -919,7 +919,7 @@ body::-webkit-scrollbar-thumb {
   background: url(../images/hero/hero-bg-sp.png), linear-gradient(#242424 100%, #242424 100%);
   background-repeat: no-repeat;
   background-size: cover;
-  padding: 220px 0 150px;
+  padding: 120px 0 150px;
   margin-top: -1px;
   overflow: hidden;
 }
