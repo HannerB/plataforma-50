@@ -213,24 +213,6 @@ var testimonialSlider_two = new Swiper(".testimonial-slider-two", {
 // Obtener el formulario.
 var form = $('#contact-form');
 
-// Determinar el idioma basado en el atributo action del formulario
-var isEnglish = form.attr('action').includes('mail_e.php');
-
-// Configurar los mensajes según el idioma
-var messages = {
-    sending: isEnglish ? 'Sending message...' : 'Enviando mensaje...',
-    success: {
-        title: isEnglish ? 'Success!' : '¡Éxito!',
-        text: isEnglish ? 'Message sent successfully.' : 'Mensaje enviado correctamente.'
-    },
-    error: {
-        title: isEnglish ? 'Error' : 'Error',
-        text: isEnglish ? 'An error occurred. Please try again.' : 'Ocurrió un error. Por favor, intenta de nuevo.',
-        serverError: isEnglish ? 'Error in server response. Please try again.' : 'Error en la respuesta del servidor. Por favor, intenta de nuevo.'
-    },
-    button: isEnglish ? 'OK' : 'Aceptar'
-};
-
 // Configurar un listener de eventos para el formulario de contacto.
 $(form).on('submit', function(e) {
     // Evitar que el navegador envíe el formulario.
@@ -241,7 +223,7 @@ $(form).on('submit', function(e) {
 
     // Mostrar indicador de carga
     Swal.fire({
-        title: messages.sending,
+        title: 'Enviando mensaje...',
         allowOutsideClick: false,
         didOpen: () => {
             Swal.showLoading();
@@ -262,18 +244,18 @@ $(form).on('submit', function(e) {
             // Mensaje enviado con éxito
             Swal.fire({
                 icon: 'success',
-                title: messages.success.title,
-                text: messages.success.text,
-                confirmButtonText: messages.button
+                title: '¡Éxito!',
+                text: 'Mensaje enviado correctamente.',
+                confirmButtonText: 'Aceptar'
             });
             $('#contact-form input, #contact-form textarea').val('');
         } else {
             // El servidor respondió, pero no con éxito
             Swal.fire({
                 icon: 'error',
-                title: messages.error.title,
-                text: response.message || messages.error.text,
-                confirmButtonText: messages.button
+                title: 'Error',
+                text: response.message || 'Ocurrió un error. Por favor, intenta de nuevo.',
+                confirmButtonText: 'Aceptar'
             });
         }
     })
@@ -282,7 +264,7 @@ $(form).on('submit', function(e) {
         console.log("Error lanzado:", errorThrown);
         console.log("Respuesta del servidor:", jqXHR.responseText);
 
-        let errorMessage = messages.error.serverError;
+        let errorMessage = 'Error en la respuesta del servidor. Por favor, intenta de nuevo.';
         try {
             var response = JSON.parse(jqXHR.responseText);
             errorMessage = response.message || errorMessage;
@@ -292,9 +274,9 @@ $(form).on('submit', function(e) {
 
         Swal.fire({
             icon: 'error',
-            title: messages.error.title,
+            title: 'Error',
             text: errorMessage,
-            confirmButtonText: messages.button
+            confirmButtonText: 'Aceptar'
         });
     });
 });
